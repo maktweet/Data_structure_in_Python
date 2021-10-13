@@ -17,17 +17,25 @@ stages:
       - job: FirstJob
         steps:
         - bash: echo Build FirstJob
+      - job: SecondJob
+        steps:
+        - bash: echo $(PiplelineLevelVariable)
   - stage: DevDeploy
+    dependsOn: BUILD
     jobs:
       - job: DevDeployJob
         steps:
           - bash: echo Build DevDeploy
   - stage: QADeploy
+    dependsOn: DevDeploy
     jobs:
       - job: QADeployJob
         steps:
           - bash: echo QA Deploy
   - stage: ProdDeploy
+    dependsOn: 
+      - DevDeploy
+      - QADeploy
     jobs:
       - job: ProdDeployJob
         steps:
